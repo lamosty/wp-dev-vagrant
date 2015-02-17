@@ -1,0 +1,20 @@
+---
+
+- name: Download Composer
+  shell: curl -sS https://getcomposer.org/installer | hhvm --php -dHttp.SlowQueryThreshold=30000
+
+- name: Move Composer to Bin
+  shell: mv composer.phar /usr/local/bin/composer
+
+- name: Use HHVM for Composer
+  lineinfile:
+    dest=/etc/bash.bashrc
+    line='alias composer="hhvm -v ResourceLimit.SocketDefaultTimeout=30 -v Http.SlowQueryThreshold=30000 -v Eval.Jit=false /usr/local/bin/composer"'
+    regexp='^alias composer="hhvm'
+    owner=root
+    state=present
+    insertafter=EOF
+    create=True
+
+- name: Update Composer
+  shell: composer self-update

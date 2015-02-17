@@ -6,5 +6,9 @@
 
   roles:
   - common
+  - hhvm
+  - composer
   - mariadb
+  - nginx
+
 
