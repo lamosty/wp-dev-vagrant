@@ -1,0 +1,7 @@
+mariadb_dist: trusty
+keyserver_fingerprint: "0xcbcb082a1bb943db"
+mirror: nyc2.mirrors.digitalocean.com
+version: "10.0"
+
+mysql_user: root
+mysql_root_password: password

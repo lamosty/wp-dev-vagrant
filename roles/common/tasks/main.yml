@@ -1,0 +1,24 @@
+---
+- name: Update Apt
+  apt: update_cache=yes
+
+- name: Generate locale
+  locale_gen: name="en_US.UTF-8" state=present
+
+- name: Update locale
+  command: /usr/sbin/update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+
+- name: Install htop
+  apt: name="htop" state=present
+
+- name: Install system packages
+  apt: name="{{ item }}" state=present
+  with_items:
+  - python-software-properties
+  - python-pycurl
+  - build-essential
+  - curl
+  - git-core
+  - wget
+  - python-mysqldb # used for handling MariaDB from Ansible
+

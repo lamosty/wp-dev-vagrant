@@ -1,0 +1,10 @@
+---
+- name: "Web Dev headless server with Nginx, HHVM, MariaDB, Composer, WordPress, WP-CLI, phpMyAdmin"
+  hosts: web-dev
+  sudo: yes
+  remote_user: lamosty
+
+  roles:
+  - common
+  - mariadb
+
