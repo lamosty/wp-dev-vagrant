@@ -25,6 +25,8 @@ Vagrant.configure('2') do |config|
 
   # Required for NFS to work, pick any local IP
   config.vm.network :private_network, ip: '192.168.50.5'
+  config.vm.network "forwarded_port", guest: 8080, host: 8080
+  config.vm.network "forwarded_port", guest: 8443, host: 8443
 
   # Send our public ssh keys to the VM
   config.ssh.forward_agent = true

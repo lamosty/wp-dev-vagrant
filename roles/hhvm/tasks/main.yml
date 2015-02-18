@@ -11,3 +11,11 @@
 
 - name: Install HHVM
   apt: name="hhvm" state=latest
+
+- name: Configure HHVM FastCGI daemon
+  template: src=hhvm-server.ini.j2 dest=/etc/hhvm/server.ini
+  notify: restart hhvm
+
+- name: Configure HHVM php.ini file
+  template: src=hhvm-php.ini.j2 dest=/etc/hhvm/php.ini
+  notify: restart hhvm
