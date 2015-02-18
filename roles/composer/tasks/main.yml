@@ -17,4 +17,5 @@
     create=True
 
 - name: Update Composer
-  shell: composer self-update
+  shell: composer self-update 
+  sudo: true

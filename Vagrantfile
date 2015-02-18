@@ -9,10 +9,14 @@ if File.exists?(config_file)
   ansible_configs = YAML.load_file(config_file)
 
   local_www_root = ansible_configs["local_www_root"]
-  remote_www_root = ansible_configs["remote_www_root"]
 
+  remote_www_root = ansible_configs["remote_www_root"]
 else
   raise 'group_vars/web-dev file not found. Please set `ANSIBLE_PATH` in Vagrantfile'
+end
+
+unless Vagrant.has_plugin?("vagrant-vbguest")
+    raise 'vagrant-vbguest is not installed: vagrant plugin install vagrant-vbguest'
 end
 
 
@@ -60,9 +64,7 @@ Vagrant.configure('2') do |config|
   # Configure NFS
 
   if Vagrant::Util::Platform.windows?
-    wordpress_sites.each do |site|
-      config.vm.synced_folder local_www_root, remote_www_root, owner: 'vagrant', group: 'www-data', mount_options: ['dmode=776', 'fmode=775']
-    end
+    config.vm.synced_folder local_www_root, remote_www_root, owner: 'vagrant', group: 'www-data', mount_options: ['dmode=776', 'fmode=775']
   else
 
     # Bindfs used for correct permissions
@@ -71,10 +73,10 @@ Vagrant.configure('2') do |config|
       raise Vagrant::Errors::VagrantError.new,
         "vagrant-bindfs missing, please install the plugin:\nvagrant plugin install vagrant-bindfs"
     else
-      wordpress_sites.each do |site|
-        config.vm.synced_folder local_www_root, "/vagrant-nfs", type: 'nfs'
-        config.bindfs.bind_folder "/vagrant-nfs", remote_www_root, u: 'vagrant', g: 'www-data'
-      end
+     
+      config.vm.synced_folder local_www_root, "/vagrant-nfs", type: 'nfs'
+      config.bindfs.bind_folder "/vagrant-nfs", remote_www_root, u: 'vagrant', g: 'www-data'
+      
     end
   end
 end
