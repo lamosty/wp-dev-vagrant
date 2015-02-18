@@ -1,3 +1,8 @@
 .vagrant
+
+# Custom mysql password
 roles/*/vars/
+
+# Custom vhosts config
+roles/nginx/templates/sites.conf.j2
 
