@@ -3,7 +3,5 @@
 logs_root: /var/log/nginx/
 nginx_user: www-data
 
-www_root: /srv/www
-
 nginx_sites:
  - nginx_site

@@ -1,0 +1,2 @@
+local_www_root: /Users/lamosty/dev
+remote_www_root: /srv/www
