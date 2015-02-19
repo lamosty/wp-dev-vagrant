@@ -7,6 +7,7 @@
 
 - name: Update locale
   command: /usr/sbin/update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+  notify: reconfigure dpkg
 
 - name: Install htop
   apt: name="htop" state=present
