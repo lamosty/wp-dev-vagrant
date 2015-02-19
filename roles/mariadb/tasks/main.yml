@@ -1,4 +1,5 @@
 ---
+
 - name: Add MariaDB MySQL apt-key
   apt_key: url="http://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search={{ keyserver_fingerprint }}"
            state=present
@@ -11,6 +12,13 @@
 
 - name: Install MariaDB MySQL server
   apt: name=mariadb-server state=present
+
+- name: Configure MariaDB server
+  template: src=my.cnf.j2 dest=/etc/mysql/my.cnf
+  notify: 
+   - restart mariadb
+   - create/update mariadb debian-sys-maint user
+   - execute the creation script
 
 - name: Start MariaDB MySQL Server
   service: name=mysql state=started enabled=true

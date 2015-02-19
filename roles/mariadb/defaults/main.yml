@@ -2,5 +2,6 @@ keyserver_fingerprint: "0xcbcb082a1bb943db"
 mirror: nyc2.mirrors.digitalocean.com
 version: "10.0"
 
+# If you are sharing DB between host and guest os, set the same password as you have in the host os mysql/mariadb database
 mysql_user: root
 mysql_root_password: password

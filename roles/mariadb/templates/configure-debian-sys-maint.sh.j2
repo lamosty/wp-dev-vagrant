@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+echo "SET PASSWORD FOR 'debian-sys-maint'@'localhost' = PASSWORD('`sudo cat /etc/mysql/debian.cnf | grep password | head -n 1 | awk -F= '{ gsub(/[ \t]+/, "", $2); print $2 }'`');" | mysql -u root --password="{{ mysql_root_password }}"

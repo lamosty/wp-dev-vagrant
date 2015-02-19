@@ -9,8 +9,10 @@ if File.exists?(config_file)
   ansible_configs = YAML.load_file(config_file)
 
   local_www_root = ansible_configs["local_www_root"]
-
   remote_www_root = ansible_configs["remote_www_root"]
+
+  local_mysql_data_dir = ansible_configs["local_mysql_data_dir"]
+  remote_mysql_data_dir = ansible_configs["remote_mysql_data_dir"]
 else
   raise 'group_vars/web-dev file not found. Please set `ANSIBLE_PATH` in Vagrantfile'
 end
@@ -19,9 +21,9 @@ unless Vagrant.has_plugin?("vagrant-vbguest")
     raise 'vagrant-vbguest is not installed: vagrant plugin install vagrant-vbguest'
 end
 
-
 Vagrant.configure('2') do |config|
   config.vm.box = 'lamosty/web-dev'
+  config.vbguest.auto_update = false
 
   # Required for NFS to work, pick any local IP
   config.vm.network :private_network, ip: '192.168.50.5'
@@ -66,22 +68,28 @@ Vagrant.configure('2') do |config|
   # Configure NFS
 
   if Vagrant::Util::Platform.windows?
-    config.vm.synced_folder local_www_root, remote_www_root, owner: 'vagrant', group: 'www-data', mount_options: ['dmode=776', 'fmode=775']
-  else
-
-    # Bindfs used for correct permissions
-
-    if !Vagrant.has_plugin? 'vagrant-bindfs'
-      raise Vagrant::Errors::VagrantError.new,
-        "vagrant-bindfs missing, please install the plugin:\nvagrant plugin install vagrant-bindfs"
+      config.vm.synced_folder local_www_root, remote_www_root, owner: 'vagrant', group: 'www-data', mount_options: ['dmode=776', 'fmode=775']
     else
-     
-      config.vm.synced_folder local_www_root, "/vagrant-nfs", type: 'nfs'
-      config.bindfs.bind_folder "/vagrant-nfs", remote_www_root, u: 'vagrant', g: 'www-data'
-      
+
+      # Bindfs used for correct permissions
+
+      if !Vagrant.has_plugin? 'vagrant-bindfs'
+        raise Vagrant::Errors::VagrantError.new,
+          "vagrant-bindfs missing, please install the plugin:\nvagrant plugin install vagrant-bindfs"
+      else
+       
+        config.vm.synced_folder local_www_root, "/vagrant-nfs", type: 'nfs'
+        config.vm.synced_folder local_mysql_data_dir, "/vagrant-mysql", type: 'nfs'
+
+        config.bindfs.bind_folder "/vagrant-nfs", remote_www_root, u: 'vagrant', g: 'www-data'
+
+        # Can't execute this command before user 'mysql' is created. It is executed in 'mariadb' ansible role.
+        config.bindfs.bind_folder "/vagrant-mysql", remote_mysql_data_dir, u: 'root', g: 'root'
+        
+      end
     end
-  end
 end
+
 
 
 

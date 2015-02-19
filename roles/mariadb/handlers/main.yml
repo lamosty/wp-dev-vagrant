@@ -1,0 +1,11 @@
+---
+
+- name: restart mariadb
+  service: name=mysql state=restarted
+
+- name: create/update mariadb debian-sys-maint user
+  template: src=configure-debian-sys-maint.sh.j2 dest=/home/vagrant/configure-debian-sys-maint.sh
+            mode=0755
+
+- name: execute the creation script
+  shell: /home/vagrant/configure-debian-sys-maint.sh

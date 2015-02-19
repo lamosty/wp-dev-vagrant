@@ -1,4 +1,7 @@
 ---
 
 - name: restart hhvm
-  service: name=hhvm enabled=yes state=restarted
+  service: name=hhvm state=restarted
+
+- name: start hhvm
+  service: name=hhvm state=started enabled=yes

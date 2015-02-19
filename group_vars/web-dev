@@ -1,2 +1,5 @@
 local_www_root: /Users/lamosty/dev
 remote_www_root: /srv/www
+
+local_mysql_data_dir: /usr/local/mysql/data
+remote_mysql_data_dir: /srv/mysql
