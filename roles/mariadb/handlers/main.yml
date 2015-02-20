@@ -1,5 +1,8 @@
 ---
 
+- name: disable starting mariadb on boot
+  service: name=mysql enabled=no
+
 - name: restart mariadb
   service: name=mysql state=restarted
 

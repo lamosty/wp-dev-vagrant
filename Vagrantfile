@@ -25,6 +25,9 @@ Vagrant.configure('2') do |config|
   config.vm.box = 'lamosty/web-dev'
   config.vbguest.auto_update = false
 
+  # disable default folder syncing
+  config.vm.synced_folder '.', '/vagrant', disabled: true
+
   # Required for NFS to work, pick any local IP
   config.vm.network :private_network, ip: '192.168.50.5'
   config.vm.network "forwarded_port", guest: 8080, host: 8080
@@ -45,8 +48,10 @@ Vagrant.configure('2') do |config|
       ansible_ssh_user: 'vagrant',
       user: 'vagrant'
     }
-
   end
+
+  # needed for MariaDB service to start after mounting the shared data dir
+  config.vm.provision :shell, :inline => "sudo service mysql start", run: 'always'
 
   config.vm.provider 'virtualbox' do |vb|
     # Give VM access to all cpu cores on the host
@@ -68,7 +73,7 @@ Vagrant.configure('2') do |config|
   # Configure NFS
 
   if Vagrant::Util::Platform.windows?
-      config.vm.synced_folder local_www_root, remote_www_root, owner: 'vagrant', group: 'www-data', mount_options: ['dmode=776', 'fmode=775']
+      config.vm.synced_folder local_www_root, remote_www_root, owner: 'www-data', group: 'www-data', mount_options: ['dmode=776', 'fmode=775']
     else
 
       # Bindfs used for correct permissions
@@ -81,11 +86,10 @@ Vagrant.configure('2') do |config|
         config.vm.synced_folder local_www_root, "/vagrant-nfs", type: 'nfs'
         config.vm.synced_folder local_mysql_data_dir, "/vagrant-mysql", type: 'nfs'
 
-        config.bindfs.bind_folder "/vagrant-nfs", remote_www_root, u: 'vagrant', g: 'www-data'
+        config.bindfs.bind_folder "/vagrant-nfs", remote_www_root, u: 'www-data', g: 'www-data'
 
         # Can't execute this command before user 'mysql' is created. It is executed in 'mariadb' ansible role.
-        config.bindfs.bind_folder "/vagrant-mysql", remote_mysql_data_dir, u: 'root', g: 'root'
-        
+        config.bindfs.bind_folder "/vagrant-mysql", remote_mysql_data_dir, u: 'root', g: 'root', multithreaded: true, o: 'nonempty'        
       end
     end
 end

@@ -1,0 +1,18 @@
+---
+
+- name: Remove Chef
+  apt: name="chef" state=absent
+
+- name: Remove Puppet
+  apt: name="puppet" state=absent
+
+- name: Check if anything needs autoremoving
+  shell: apt-get -y --dry-run autoremove | grep -q "0 to remove"
+  register: check_autoremove
+  ignore_errors: True
+  changed_when: False
+  always_run: True
+
+- name: Autoremove unused packages
+  command: apt-get -y autoremove
+  when: "check_autoremove.rc != 0"

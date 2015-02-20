@@ -12,6 +12,7 @@
 
 - name: Install MariaDB MySQL server
   apt: name=mariadb-server state=present
+  notify: disable starting mariadb on boot
 
 - name: Configure MariaDB server
   template: src=my.cnf.j2 dest=/etc/mysql/my.cnf
@@ -19,38 +20,3 @@
    - restart mariadb
    - create/update mariadb debian-sys-maint user
    - execute the creation script
-
-- name: Start MariaDB MySQL Server
-  service: name=mysql state=started enabled=true
-
-- name: Set root user password
-  mysql_user: name=root
-              password="{{ mysql_root_password }}"
-              check_implicit_admin=yes
-              login_user="{{ mysql_user }}"
-              login_password="{{ mysql_root_password }}"
-              state=present
-  with_items:
-    - "{{ ansible_hostname }}"
-    - 127.0.0.1
-    - ::1
-    - localhost
-
-- name: Delete anonymous MySQL server user for current hostname
-  mysql_user: user=""
-              host="{{ ansible_hostname }}"
-              state=absent
-              login_user="{{ mysql_user }}"
-              login_password="{{ mysql_root_password }}"
-
-- name: Delete anonymous MySQL server user for localhost
-  mysql_user: user=""
-              state=absent
-              login_user="{{ mysql_user }}"
-              login_password="{{ mysql_root_password }}"
-
-- name: Remove the test database
-  mysql_db: name=test
-            state=absent
-            login_user="{{ mysql_user }}"
-            login_password="{{ mysql_root_password }}"
