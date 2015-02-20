@@ -1,5 +1,5 @@
 ---
-- name: "Web Dev headless server with Nginx, HHVM, MariaDB, Composer, WordPress, WP-CLI, phpMyAdmin"
+- name: "Web Dev headless server with Nginx, HHVM, MariaDB, Composer, NodeJS WordPress, WP-CLI, phpMyAdmin"
   hosts: web-dev
   sudo: yes
   remote_user: lamosty
@@ -10,6 +10,4 @@
   - composer
   - mariadb
   - nginx
-
-
-
+  - nodejs

@@ -1,0 +1,13 @@
+---
+
+- name: Download nodejs installer
+  get_url:
+    url=https://deb.nodesource.com/setup
+    dest=/tmp/node-setup.sh
+    mode=0775
+
+- name: Run nodejs installer
+  command: bash /tmp/node-setup.sh
+
+- name: Install nodejs with apt
+  apt: name="nodejs" state=present
