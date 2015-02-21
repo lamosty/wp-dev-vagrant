@@ -26,3 +26,4 @@
   - wget
   - python-mysqldb # used for handling MariaDB from Ansible
 
+
