@@ -1,6 +1,6 @@
 # WordPress Development Vagrant Configs
 
-I use these vagrant server configurations for local development of web applications, primarily WordPress related development. Ansible is used for provisioning of newly created server and. [vagrant-bindfs](gael-ian/vagrant-bindfs) for proper permissions of NFS shared folders.
+I use these vagrant server configurations for local development of web applications, primarily WordPress related development. Ansible is used for provisioning of newly created server and [vagrant-bindfs](gael-ian/vagrant-bindfs) for proper permissions of NFS shared folders.
 
 ## Features
 
