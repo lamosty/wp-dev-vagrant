@@ -93,7 +93,7 @@ Vagrant.configure('2') do |config|
         config.vm.synced_folder local_www_root, "/vagrant-nfs", type: 'nfs'
         config.vm.synced_folder local_mysql_data_dir, "/vagrant-mysql", type: 'nfs'
 
-        config.bindfs.bind_folder "/vagrant-nfs", remote_www_root, u: 'www-data', g: 'vagrant', p: 'u=rwx:g=rwx:o=rwx', chown_ignore: true, chmod_ignore: true, m: 'vagrant,www-data'
+        config.bindfs.bind_folder "/vagrant-nfs", remote_www_root, u: 'www-data', g: 'vagrant', p: 'u=rwx:g=rwx:o=rD', chown_ignore: true, chmod_ignore: true, m: 'vagrant,www-data'
 
         # Can't execute this command before user 'mysql' is created. It is executed in 'mariadb' ansible role.
         config.bindfs.bind_folder "/vagrant-mysql", remote_mysql_data_dir, u: 'root', g: 'root', multithreaded: true, o: 'nonempty'        

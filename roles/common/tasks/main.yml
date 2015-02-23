@@ -26,4 +26,13 @@
   - wget
   - python-mysqldb # used for handling MariaDB from Ansible
 
+  # TODO: as templates
+  
+- name: Copy git configurations
+  copy: src={{ home_dir }}/{{ item }} dest={{ remote_home_dir }}
+  with_items:
+    - .gitconfig
+    - .githelpers
+    - .gitignore
+    - .git_template
 
