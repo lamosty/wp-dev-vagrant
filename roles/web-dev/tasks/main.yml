@@ -1,0 +1,21 @@
+---
+
+- name: Install Yeoman globally
+  npm: name=yo global=yes
+
+- name: Install PHP CodeSniffer
+  shell: composer global require "squizlabs/php_codesniffer=*"
+  sudo: no
+
+- name: Download WordPress Coding Standards
+  git: repo=https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git
+       dest=~/php-libs/wp-coding-standards
+       version=master
+  sudo: no
+
+- name: Configure WordPress Coding Standards for CodeSniffer
+  shell: >
+    phpcs --config-set installed_paths ~/php-libs/wp-coding-standards
+  sudo: no
+
+

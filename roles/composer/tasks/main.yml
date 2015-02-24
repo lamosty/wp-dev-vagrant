@@ -16,3 +16,11 @@
   environment:
    LC_ALL: en_US.UTF-8
    LANG: en_US.UTF-8
+
+- name: Add ~/.composer/vendor/bin to PATH
+  lineinfile:
+    dest=/etc/environment
+    state=present
+    backrefs=yes
+    regexp='PATH=(["]*)((?!.*?{{ composer_bin_path }}).*?)(["]*)$'
+    line="PATH=\1\2:{{ composer_bin_path }}\3"
